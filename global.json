@@ -1,0 +1,6 @@
+{
+    "projects":[
+        "FibonacciHeap",
+        "FibonacciHeap.Tests"
+    ]
+}
