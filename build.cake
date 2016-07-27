@@ -3,14 +3,14 @@ var target = Argument("target", "Default");
 Task("Default")
   .Does(() =>
 {
-  if(IsRunningOnUnix())
+  DotNetCoreRestore();
+
+  var settings = new DotNetCoreBuildSettings
   {
-      XBuild("FibonacciHeap.sln",new XBuildSettings().WithProperty("POSIX","True"));
-  }
-  else
-  {
-      MSBuild("FibonacciHeap.sln");
-  }
+    Configuration = "Release",
+    OutputDirectory = "./bin/"
+  };
+  DotNetCoreBuild("./FibonacciHeap",settings);
 });
 
 RunTarget(target);
