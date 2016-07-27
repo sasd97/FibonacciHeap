@@ -1,25 +1,46 @@
 var target = Argument("target", "Default");
+var outputDirectoryPath = ".bin";
 
 Task("Default")
-  .Does(() =>
-{
-  DotNetCoreRestore();
+  .IsDependentOn("UnitTests");
 
-  var settings = new DotNetCoreBuildSettings
+Task("Clean")
+  .Does(()=>
   {
-    Configuration = "Release",
-    OutputDirectory = "./bin/",
-    Framework = "netstandard1.6" 
-  };
-  DotNetCoreBuild("./FibonacciHeap",settings);
+    CleanDirectory(outputDirectoryPath);
+  });
 
-  var testSettings = new DotNetCoreBuildSettings
+Task("BuildLib")
+  .IsDependentOn("RestoreNuget")
+  .Does(()=>
   {
-    Configuration = "Release",
-    OutputDirectory = "./bin/",
-    Framework = "netcoreapp1.0"
-  };
-  DotNetCoreBuild("./FibonacciHeap.Tests",testSettings);
-});
+    var settings = new DotNetCoreBuildSettings
+    {
+      Configuration = "Release",
+      OutputDirectory = outputDirectoryPath,
+      Framework = "netstandard1.6" 
+    };
+    DotNetCoreBuild("./FibonacciHeap",settings);
+  });
+
+Task("RestoreNuget")
+  .IsDependentOn("Clean")
+  .Does(()=>
+  {
+    DotNetCoreRestore();
+  });
+
+Task("UnitTests")
+  .IsDependentOn("BuildLib")
+  .Does(()=>
+  {
+    var testSettings = new DotNetCoreBuildSettings
+    {
+      Configuration = "Release",
+      OutputDirectory = outputDirectoryPath,
+      Framework = "netcoreapp1.0"
+    };
+    DotNetCoreBuild("./FibonacciHeap.Tests",testSettings);
+  });
 
 RunTarget(target);
