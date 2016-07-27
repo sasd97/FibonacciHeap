@@ -1,5 +1,5 @@
 var target = Argument("target", "Default");
-var outputDirectoryPath = ".bin";
+var outputDirectoryPath = "./bin";
 
 Task("Default")
   .IsDependentOn("UnitTests");
