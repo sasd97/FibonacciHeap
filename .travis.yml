@@ -26,5 +26,4 @@ cache:
     - tools
 
 script:
-    - dotnet restore
-    - dotnet build
+    - ./build.sh
